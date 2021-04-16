@@ -1,41 +1,65 @@
-import React,{Component} from "react";
-import {Segment,Form,Button} from "semantic-ui-react";
+import React, { Component } from "react";
+import { Segment, Form, Button } from "semantic-ui-react";
 
-export default class EventForm extends Component{
-	render(){
-		const {cancelFormOpen} = this.props;
-		return(
+export default class EventForm extends Component {
+	state = {
+		title: "",
+		date:'',
+		city:'',
+		venue:'',
+		hostedBy:''
+	};
+
+	handleFormSubmit = (evt) => {
+		evt.preventDefault();
+		console.log(this.state)
+		this.props.createEvent(this.state);
+	};
+
+	handleInputChange = (evt) =>{
+		this.setState({
+			[evt.target.name]: evt.target.value
+		})
+	}
+
+	render() {
+		const { cancelFormOpen } = this.props;
+		const { title,date,city,venue,hostedBy} = this.state;
+		return (
 			<Segment>
-				<Form>
+				<Form onSubmit={this.handleFormSubmit} autoComplete="off">
 					<Form.Field>
 						<label>Event Title</label>
-						<input placeholder="First Name"/>
+						<input name="title" placeholder="Event Title" value={title} onChange={this.handleInputChange} />
 					</Form.Field>
 					<Form.Field>
 						<label>Event Date</label>
-						<input  type="date" placeholder="Event Date"/>
+						<input  name="date" type="date" placeholder="Event Date"  value={date} onChange={this.handleInputChange}/>
 					</Form.Field>
 
 					<Form.Field>
 						<label>City</label>
-						<input placeholder="City event is taking place"/>
+						<input name="city" placeholder="City event is taking place" value={city} onChange={this.handleInputChange} />
 					</Form.Field>
 
 					<Form.Field>
 						<label>Venue</label>
-						<input placeholder="Enter the Venue of the event"/>
+						<input  name="venue" placeholder="Enter the Venue of the event" value={venue}  onChange={this.handleInputChange}/>
 					</Form.Field>
-
 
 					<Form.Field>
 						<label>Hosted By</label>
-						<input placeholder="Enter the name of person hoisting"/>
+						<input name="hostedBy"  placeholder="Enter the name of person hoisting" value={hostedBy} onChange={this.handleInputChange} />
 					</Form.Field>
 
-					<Button positive type="submit">Submit</Button>
-					<Button onClick={cancelFormOpen} type="button">Cancel</Button>
+					<Button positive type="submit">
+						Submit
+					</Button>
+					<Button onClick={cancelFormOpen} type="button">
+						Cancel
+					</Button>
 				</Form>
 			</Segment>
-		)
+		);
 	}
-} 
+}

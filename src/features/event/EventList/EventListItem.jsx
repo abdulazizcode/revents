@@ -2,12 +2,7 @@ import React, { Component } from "react";
 import EventListAttendee from "./EventListAttendee"
 import {
   Segment,
-  Group,
   Item,
-  Image,
-  Header,
-  Content,
-  Description,
   Icon,
   Button,
   List,
@@ -23,9 +18,9 @@ export default class EventListItem extends Component {
             <Item>
               <Item.Image size="tiny" circular src={this.props.event.hostPhotoURL} />
               <Item.Content>
-                <Item.Header as="a">{event.title}</Item.Header>
+                <Item.Header >{event.title}</Item.Header>
                 <Item.Description>
-                  Hosted by <a>{event.hostedBy}</a>
+                  Hosted by {event.hostedBy}
                 </Item.Description>
               </Item.Content>
             </Item>
@@ -39,9 +34,9 @@ export default class EventListItem extends Component {
         </Segment>
         <Segment secondary>
           <List horizontal>
-            {event.attendees.map((attendee) =>{
+            {event.attendees && event.attendees.map((attendee) =>{
               return(<EventListAttendee key={attendee.id} attendee={attendee}/>)
-              })}
+            })}
           </List>
         </Segment>
         <Segment clearing>
