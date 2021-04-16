@@ -7,14 +7,14 @@ import cuid from "cuid"
 const events = [
   {
     id: '1',
-    title: 'Trip to Tower of London',
-    date: '2018-03-27T11:00:00+00:00',
-    category: 'culture',
+    title: 'Graduation Speech',
+    date: '2021-03-27',
+    category: 'education',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
-    city: 'London, UK',
-    venue: "Tower of London, St Katharine's & Wapping, London",
-    hostedBy: 'Bob',
+    city: 'Cyberjaya, TJ',
+    venue: "Limkokwing University, Cyberjaya",
+    hostedBy: 'Abdusamadzoda Abdulaziz',
     hostPhotoURL: 'https://randomuser.me/api/portraits/men/20.jpg',
     attendees: [
       {
@@ -31,14 +31,14 @@ const events = [
   },
   {
     id: '2',
-    title: 'Trip to Punch and Judy Pub',
-    date: '2018-03-28T14:00:00+00:00',
-    category: 'drinks',
+    title: 'ReactJS Conf',
+    date: '2021-03-28',
+    category: 'development',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
-    city: 'London, UK',
+    city: 'Dushanbe, TJ',
     venue: 'Punch & Judy, Henrietta Street, London, UK',
-    hostedBy: 'Tom',
+    hostedBy: 'Aziz Abdurasul',
     hostPhotoURL: 'https://randomuser.me/api/portraits/men/22.jpg',
     attendees: [
       {
@@ -58,15 +58,26 @@ const events = [
 export default class EventDashboard extends React.Component {
   state ={
     events:events,
-    isOpen:false
+    isOpen:false,
+    selectedEvent: null
   }
 
-  //Toggle  button based on prevState
-   handleIsOpenToggle = () =>{
-    this.setState(({isOpen}) =>  ({
-      isOpen: !isOpen
-    }))
+
+
+
+  handleCreateFormOpen = () =>{
+    this.setState({
+      isOpen:true,
+      selectedEvent:null
+    })
   }
+
+  handleFormCancel = () =>{
+    this.setState({
+      isOpen:false
+    })
+  }
+
 
   handleCreateEvent = (newEvent) => {
     newEvent.id = cuid();
@@ -77,19 +88,58 @@ export default class EventDashboard extends React.Component {
     })
   }
 
+  handleSelectedEvent = (event) =>{
+    this.setState({
+      selectedEvent:event,
+      isOpen:true
+    })
+  }
+
+  handleUpdateEvent = (updatedEvent) =>{
+    this.setState({
+      events: events.map(event =>{
+        if(event.id === updatedEvent.id){
+          return {...updatedEvent}
+        }else{
+          return event
+        }
+      }),
+      isOpen:false,
+      selectedEvent:null
+    })
+  }
+
+  handleDeleteEvent = (id) =>{
+    this.setState({
+      events: this.state.events.filter((t) => t.id !== id)
+    })
+  }
+
+
 	render(){
-    const {events, isOpen} = this.state;
+    const {events, isOpen,selectedEvent} = this.state;
+    if(this.state.events.length === 0){
+      return <EmptyDashboard/>
+    }
 		return(
 			<Grid divided='vertically'>
 				<Grid.Column width={10}>
-					<EventList events={events}/>
+					<EventList events={events} selectEvent={this.handleSelectedEvent} deleteEvent={this.handleDeleteEvent}/>
 				</Grid.Column>
 
 				<Grid.Column width={6}>
-					<Button onClick={this.handleIsOpenToggle} positive content='Create Event'></Button>
-					{isOpen && <EventForm createEvent={this.handleCreateEvent} cancelFormOpen={this.handleIsOpenToggle}/>}
+					<Button onClick={this.handleCreateFormOpen} positive content='Create Event'></Button>
+					{isOpen && <EventForm key={selectedEvent ? selectedEvent.id : 0} updateEvent={this.handleUpdateEvent} selectedEvent={selectedEvent} createEvent={this.handleCreateEvent} cancelFormOpen={this.handleFormCancel}/>}
 				</Grid.Column>
 			</Grid>
 		)
 	}
+}
+
+
+
+const EmptyDashboard = () =>{
+  return(
+    <h1 style={{textAlign:"center"}}>NO EVENTS LEFT!!!</h1>
+  )
 }
