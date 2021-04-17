@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Container } from "semantic-ui-react";
 import NavBar from "../../features/nav/NavBar/NavBar";
-import { Route, Link } from "react-router-dom";
+import { Route } from "react-router-dom";
 import HomePage from "../../features/home/HomePage";
 import EventDashboard from "../../features/event/EventDashboard/EventDashboard";
 import EventDetailedPage from "../../features/event/EventDetailed/EventDetailedPage";
@@ -17,17 +17,21 @@ class App extends React.Component {
 	render() {
 		return (
 			<Fragment>
+				<Route path="/" exact component={HomePage}/>
+				<Route path="/(.+)" render={() => (
+				<Fragment>
 				<NavBar />
 				<Container className="main">
-					<Route path="/" exact component={HomePage}/>
 					<Route path="/events" component={EventDashboard}></Route>
 					<Route path="/events/:id" component={EventDetailedPage}></Route>
 					<Route path="/people" component={PeopleDashboard}></Route>
 					<Route path="/profile/:id" component={UserDetailedPage}></Route>
 					<Route path="/settings" component={SettingsDashboard}></Route>
 					<Route path="/createEvent" component={EventForm}></Route>
-				
 				</Container>
+			</Fragment>
+			  )} 
+			/>
 			</Fragment>
 		);
 	}
